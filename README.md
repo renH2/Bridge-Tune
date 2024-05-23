@@ -98,9 +98,9 @@ optional arguments:
 The embedding will be used for evaluation in node classification. The script `evaluate.sh` are available to simplify the evaluation process as follows: 
 
 ```
-bash evaluate.sh <saved_path> <model_path> <dataset> <cuda>
+bash evaluate.sh <model_path> <name> <dataset> <gpu id>
 ```
-Here, `<saved_path>` refers to the main directory for finetuning, and `<model_path>` is the address of the subdirectory within it.
+Here, `<saved_path>` refers to the main directory for finetuning, and `<name>` is the name of specific model directory.
 
 **Demo:**
 Here is the demo instruction, after the user has trained using the demo provided above.
