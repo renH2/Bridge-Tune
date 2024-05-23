@@ -4,7 +4,7 @@
 
 ## About
 
-This repo is the official code for AAAI-24 "Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks"
+This repo is the official code for AAAI-24 ["Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks"](https://ojs.aaai.org/index.php/AAAI/article/view/29156)
 
 ## Dependencies
 The script has been tested running under Python 3.7.10, with the following packages installed (along with their dependencies):
@@ -33,16 +33,16 @@ In addition, CUDA 10.0 has been used in our project. Although not all dependenci
 `saved`: contains the pre-trained graph obtained from [GCC](https://github.com/THUDM/GCC). The specific path for pre-trained model is located in `saved/Pretrain_moco_True_dgl_gin_layer_5_lr_0.005_decay_1e-05_bsz_32_hid_64_samples_2000_nce_t_0.07_nce_k_16384_rw_hops_256_restart_prob_0.8_aug_1st_ft_False_deg_16_pos_32_momentum_0.999/`
 
 ## Usage: How to run the code
-We divide it into two steps (1) Finetuning (2) Evaluating the performance finetune model.
+We divide it into two steps (1) Fine-tuning (2) Evaluating the performance fine-tuned model.
 
-### 1. Fine-tuning via Bridge Tune
+### 1. Fine-tuning via Bridge-Tune
 
 ```bash
 python train_bridge.py \
   --resume <pre-trained model file> \
   --dataset <downstream dataset>
   --reg-coeff <coefficient for Bridge-Tune Loss> \
-  --model-path <fine-tune model saved file> \
+  --model-path <fine-tuned model saved file> \
   --gpu <gpu id> \
   --epochs <epoch number> \
   --bridge
@@ -63,8 +63,8 @@ optional arguments:
   --dataset {usa_airport,brazil_airport,europe_airport,h-index, texas,DD242,cornell,wisconsin,citeseer}
   --reg-coeff REG_COEFF  coefficient for Bridge-Tune (default:10)
   --hidden-size HIDDEN_SIZE  (default:64)
-  --model-path MODEL_PATH    path to save finetune model (default:saved)
-  --finetune            whether to conduct finetune
+  --model-path MODEL_PATH    path to save fine-tuned model (default:saved)
+  --finetune            whether to conduct fine-tune
   --gpu GPU [GPU ...]   GPU id to use.
   --bridge              whether to conduct bridge-tune
 ```
@@ -125,6 +125,9 @@ If you find this work helpful, please cite
   title={Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks},
   author={Huang, Renhong and Xu, Jiarong and Jiang, Xin and Pan, Chenglu and Yang, Zhiming and Wang, Chunping and Yang, Yang},
   booktitle={AAAI},
+  volume={38},
+  number={11}, 
+  pages={12617-12625},
   year={2024}
 }
 
