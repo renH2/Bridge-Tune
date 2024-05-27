@@ -10,7 +10,6 @@ import torch
 from gcc.contrastive.criterions import NCESoftmaxLoss, NCESoftmaxLossNS
 from gcc.contrastive.memory_moco import MemoryMoCo
 from gcc.datasets import (
-    GRAPH_CLASSIFICATION_DSETS,
     LoadBalanceGraphDataset,
     NodeClassificationDataset,
     NodeClassificationDatasetLabeled,
@@ -62,22 +61,13 @@ def main(args_test):
     args.gpu = args_test.gpu
     args.device = torch.device("cpu") if args.gpu is None else torch.device(args.gpu)
 
-    if args_test.dataset in GRAPH_CLASSIFICATION_DSETS:
-        train_dataset = GraphClassificationDataset(
-            dataset=args_test.dataset,
-            rw_hops=args.rw_hops,
-            subgraph_size=args.subgraph_size,
-            restart_prob=args.restart_prob,
-            positional_embedding_size=args.positional_embedding_size,
-        )
-    else:
-        train_dataset = NodeClassificationDataset(
-            dataset=args_test.dataset,
-            rw_hops=args.rw_hops,
-            subgraph_size=args.subgraph_size,
-            restart_prob=args.restart_prob,
-            positional_embedding_size=args.positional_embedding_size,
-        )
+    train_dataset = NodeClassificationDataset(
+        dataset=args_test.dataset,
+        rw_hops=args.rw_hops,
+        subgraph_size=args.subgraph_size,
+        restart_prob=args.restart_prob,
+        positional_embedding_size=args.positional_embedding_size,
+    )
     args.batch_size = len(train_dataset)
     train_loader = torch.utils.data.DataLoader(
         dataset=train_dataset,
