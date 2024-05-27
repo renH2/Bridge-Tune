@@ -562,64 +562,74 @@ class ContinualLearningDataset(NodeClassificationDataset):
         )
         assert len(self.graphs) == 1
         self.num_classes = self.data.y.shape[1]
+        self.mode = 'bridge'
+        self.uncertain = [1] * self.data.y.shape[0]
 
     def __getitem__(self, idx):
 
-        graph_idx, node_idx = self._convert_idx(idx)
+        if self.mode == 'bridge':
+            graph_idx, node_idx = self._convert_idx(idx)
+            step = np.random.choice(len(self.step_dist), 1, p=self.step_dist)[0]
+            if step == 0:
+                other_node_idx = node_idx
+            else:
+                other_node_idx = dgl.contrib.sampling.random_walk(
+                    g=self.graphs[graph_idx], seeds=[node_idx], num_traces=1, num_hops=step
+                )[0][0][-1].item()
 
-        step = np.random.choice(len(self.step_dist), 1, p=self.step_dist)[0]
-        if step == 0:
-            other_node_idx = node_idx
+            max_nodes_per_seed = max(
+                self.rw_hops,
+                int(
+                    (
+                            self.graphs[graph_idx].out_degree(node_idx)
+                            * math.e
+                            / (math.e - 1)
+                            / self.restart_prob
+                    )
+                    + 0.5
+                ),
+            )
+            traces = dgl.contrib.sampling.random_walk_with_restart(
+                self.graphs[graph_idx],
+                seeds=[node_idx, other_node_idx],
+                restart_prob=self.restart_prob,
+                max_nodes_per_seed=max_nodes_per_seed,
+            )
+
+            graph_q = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=node_idx,
+                trace=traces[0],
+                positional_embedding_size=self.positional_embedding_size,
+                entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
+            )
+            graph_k = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=other_node_idx,
+                trace=traces[1],
+                positional_embedding_size=self.positional_embedding_size,
+                entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
+            )
+            return graph_q, graph_k, self.data.y[idx].argmax().item()
         else:
-            other_node_idx = dgl.contrib.sampling.random_walk(
-                g=self.graphs[graph_idx], seeds=[node_idx], num_traces=1, num_hops=step
-            )[0][0][-1].item()
+            graph_idx = 0
+            node_idx = idx
 
-        max_nodes_per_seed = max(
-            self.rw_hops,
-            int(
-                (
-                        self.graphs[graph_idx].out_degree(node_idx)
-                        * math.e
-                        / (math.e - 1)
-                        / self.restart_prob
-                )
-                + 0.5
-            ),
-        )
-        traces = dgl.contrib.sampling.random_walk_with_restart(
-            self.graphs[graph_idx],
-            seeds=[node_idx, other_node_idx],
-            restart_prob=self.restart_prob,
-            max_nodes_per_seed=max_nodes_per_seed,
-        )
+            traces = dgl.contrib.sampling.random_walk_with_restart(
+                self.graphs[graph_idx],
+                seeds=[node_idx],
+                restart_prob=self.restart_prob,
+                max_nodes_per_seed=self.rw_hops,
+            )
 
-        graph_q = data_util._rwr_trace_to_dgl_graph(
-            g=self.graphs[graph_idx],
-            seed=node_idx,
-            trace=traces[0],
-            positional_embedding_size=self.positional_embedding_size,
-            entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
-        )
-        graph_k = data_util._rwr_trace_to_dgl_graph(
-            g=self.graphs[graph_idx],
-            seed=other_node_idx,
-            trace=traces[1],
-            positional_embedding_size=self.positional_embedding_size,
-            entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
-        )
-        return graph_q, graph_k, self.data.y[idx].argmax().item()
+            graph_q = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=node_idx,
+                trace=traces[0],
+                positional_embedding_size=self.positional_embedding_size,
+            )
+            return graph_q, graph_q, self.data.y[idx].argmax().item()
 
-
-def pesudolabel(dataset):
-    labels = dataset.data.y.argmax(dim=1).tolist()
-    print(len(labels))
-    skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
-    idx_list = []
-    for idx in skf.split(np.zeros(len(labels)), labels):
-        idx_list.append(idx)
-    train_idx, test_idx = idx_list[0]
-    # LabelPropagation(,labels[train_idx])
 
 
 class PesudoContinualLearningDataset(PesudoNodeClassificationDataset):
@@ -646,13 +656,12 @@ class PesudoContinualLearningDataset(PesudoNodeClassificationDataset):
         assert len(self.graphs) == 1
         self.label = labels
         self.num_classes = self.data.y.shape[1]
-        self.test_id = test_id
-        self.uncertain = [1] * len(labels)
+        self.uncertain = [1] * self.data.y.shape[0]
+        self.mode = 'bridge'
 
     def update_label(self, index_list, label_list, uncertrain_list=None):
         labels = self.data.y.argmax(dim=1).tolist()
         if index_list == None:
-            # self.label = labels
             return
         count = 0
         self.uncertain = [1] * len(labels)
@@ -668,54 +677,68 @@ class PesudoContinualLearningDataset(PesudoNodeClassificationDataset):
         # self.label = labels
 
     def __getitem__(self, idx):
+        if self.mode == 'bridge':
+            graph_idx, node_idx = self._convert_idx(idx)
+            step = np.random.choice(len(self.step_dist), 1, p=self.step_dist)[0]
+            if step == 0:
+                other_node_idx = node_idx
+            else:
+                other_node_idx = dgl.contrib.sampling.random_walk(
+                    g=self.graphs[graph_idx], seeds=[node_idx], num_traces=1, num_hops=step
+                )[0][0][-1].item()
 
-        graph_idx, node_idx = self._convert_idx(idx)
+            max_nodes_per_seed = max(
+                self.rw_hops,
+                int(
+                    (
+                            self.graphs[graph_idx].out_degree(node_idx)
+                            * math.e
+                            / (math.e - 1)
+                            / self.restart_prob
+                    )
+                    + 0.5
+                ),
+            )
+            traces = dgl.contrib.sampling.random_walk_with_restart(
+                self.graphs[graph_idx],
+                seeds=[node_idx, other_node_idx],
+                restart_prob=self.restart_prob,
+                max_nodes_per_seed=max_nodes_per_seed,
+            )
 
-        # if node_idx in self.test_id:
-        #     print('unlabeled')
-
-        step = np.random.choice(len(self.step_dist), 1, p=self.step_dist)[0]
-        if step == 0:
-            other_node_idx = node_idx
+            graph_q = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=node_idx,
+                trace=traces[0],
+                positional_embedding_size=self.positional_embedding_size,
+                entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
+            )
+            graph_k = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=other_node_idx,
+                trace=traces[1],
+                positional_embedding_size=self.positional_embedding_size,
+                entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
+            )
+            return graph_q, graph_k, self.data.y[idx].argmax().item(), self.uncertain[idx]
         else:
-            other_node_idx = dgl.contrib.sampling.random_walk(
-                g=self.graphs[graph_idx], seeds=[node_idx], num_traces=1, num_hops=step
-            )[0][0][-1].item()
+            graph_idx = 0
+            node_idx = idx
 
-        max_nodes_per_seed = max(
-            self.rw_hops,
-            int(
-                (
-                        self.graphs[graph_idx].out_degree(node_idx)
-                        * math.e
-                        / (math.e - 1)
-                        / self.restart_prob
-                )
-                + 0.5
-            ),
-        )
-        traces = dgl.contrib.sampling.random_walk_with_restart(
-            self.graphs[graph_idx],
-            seeds=[node_idx, other_node_idx],
-            restart_prob=self.restart_prob,
-            max_nodes_per_seed=max_nodes_per_seed,
-        )
+            traces = dgl.contrib.sampling.random_walk_with_restart(
+                self.graphs[graph_idx],
+                seeds=[node_idx],
+                restart_prob=self.restart_prob,
+                max_nodes_per_seed=self.rw_hops,
+            )
 
-        graph_q = data_util._rwr_trace_to_dgl_graph(
-            g=self.graphs[graph_idx],
-            seed=node_idx,
-            trace=traces[0],
-            positional_embedding_size=self.positional_embedding_size,
-            entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
-        )
-        graph_k = data_util._rwr_trace_to_dgl_graph(
-            g=self.graphs[graph_idx],
-            seed=other_node_idx,
-            trace=traces[1],
-            positional_embedding_size=self.positional_embedding_size,
-            entire_graph=hasattr(self, "entire_graph") and self.entire_graph,
-        )
-        return graph_q, graph_k, self.data.y[idx].argmax().item(), self.uncertain[idx]
+            graph_q = data_util._rwr_trace_to_dgl_graph(
+                g=self.graphs[graph_idx],
+                seed=node_idx,
+                trace=traces[0],
+                positional_embedding_size=self.positional_embedding_size,
+            )
+            return graph_q, graph_q, self.data.y[idx].argmax().item(), self.uncertain[idx]
 
 
 class NodeClassificationDatasetLabeledIdx(NodeClassificationDataset):

@@ -15,38 +15,6 @@
             "./splits/d1d5bdd41805e6a6eb0fdf335ebbfb7e/features/e9cf54653de9231697763f2d1216eb5c/splits/758f74b78f2a08a1e542f38efd46db5c"
         ]
     },
-    "pubmed": {
-        "dataset": "ind.pubmed-unmodified-0.48p__0.2p",
-        "val_size": 6310,
-        "dataset_path": [
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/85b9e642da2e4ad35368afe8c6cf4034",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/855f5238efea9fdeb752014b1aa1a641",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/6354933140a89018a14395b7e7adf9cd",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/12dbd2db463f8de539e69e3fcd65fff1",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/36a82656eb5bef9ea2c74585947f9053",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/4b47a39d3dc178869cf6e580f26b33cf",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/121dc3da575445c1a7b9bd5b3939380c",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/3227de24d7669be10b4f8f9b1fca64f5",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/6e20822f01b40f32c0778a3c8453f27c",
-            "./splits/610456c7ae4623e1ea292096b375bf73/features/e9cf54653de9231697763f2d1216eb5c/splits/cd57284111e951b304619459f28dc8de"
-        ]
-    },
-    "citeseer": {
-        "dataset": "ind.citeseer-unmodified-0.48p__0.2p",
-        "val_size": 1879,
-        "dataset_path": [
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/f88e69bb924a7913bbfa184f25666492",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/d39a1f20ed58045535ac0954ad764b18",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/71169edd12b066c7ce047107e9c680ae",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/5e38d0ba34042915da96e459a818c1af",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/46672df08df50814c732b402a842804a",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/7ff831e537392d4d8304876be793623e",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/252c2270f83c842ca11a8cdd12f88eb5",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/c42f8e01a9ad29777f4bdb13996adf55",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/9b1ec4663a947a0912b35bd119544090",
-            "./splits/83dd60de1db27849a16bbe3ee6f6b8e5/features/e9cf54653de9231697763f2d1216eb5c/splits/2e8e1736918a6909494e656e2f800909"
-        ]
-    },
     "texas": {
         "dataset": "texas-n183-h0.11-c5-unmodified-0.48p__0.2p",
         "val_size": 59,

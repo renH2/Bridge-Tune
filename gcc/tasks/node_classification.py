@@ -1,8 +1,8 @@
 import argparse
+import sys
+sys.path.append('./')
 import warnings
 from collections import defaultdict
-import sys
-sys.path.append('/home/srtpgroup/tfgcc')
 import networkx as nx
 import numpy as np
 import torch

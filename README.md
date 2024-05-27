@@ -24,7 +24,7 @@ In addition, CUDA 10.0 has been used in our project. Although not all dependenci
 
 `data`: contains the data of "DD242, DD68, DD687, usa_airport, brazil_airport, europe_airport".
 
-`splits`: **need to unzipped**, contains the split data of "cora, pubmed, cornell and wisconsin".
+`splits`: **need to unzipped**, contains the split data of "cornell, wisconsin".
 
 `scripts`: contains all the scripts for running code.
 
@@ -48,24 +48,22 @@ python train_bridge.py \
   --bridge
 ```
 
-For more detail, the help information of the main script `train_bridge.py` can be obtain by executing the following command.
+For more detail, the help information of the main script `train_bridge.py` can be obtained by executing the following command.
 
 ```bash
 python train_bridge.py -h
 
 optional arguments:
   -h, --help            show this help message and exit
-  --epochs EPOCHS       number of training epochs (default:30)
-  --optimizer {sgd,adam,adagrad}
-                        optimizer (default:adam)
+  --epochs EPOCHS       number of training epochs (default:50)
+  --optimizer {sgd,adam,adagrad}  optimizer (default:adam)
   --learning_rate LEARNING_RATE  learning rate (default:0.005)
   --resume PATH         path for pre-trained model (default: GCC)
-  --dataset {usa_airport,brazil_airport,europe_airport,h-index, texas,DD242,cornell,wisconsin,citeseer}
+  --dataset {usa_airport,brazil_airport,europe_airport,h-index, DD242, DD68, DD687, cornell, wisconsin}
   --reg-coeff REG_COEFF  coefficient for Bridge-Tune (default:10)
   --hidden-size HIDDEN_SIZE  (default:64)
   --model-path MODEL_PATH    path to save fine-tuned model (default:saved)
-  --finetune            whether to conduct fine-tune
-  --gpu GPU [GPU ...]   GPU id to use.
+  --gpu GPU              GPU id to use.
   --bridge              whether to conduct bridge-tune
 ```
 
@@ -130,5 +128,4 @@ If you find this work helpful, please cite
   pages={12617-12625},
   year={2024}
 }
-
 ```
