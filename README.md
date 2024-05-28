@@ -29,7 +29,7 @@ For more technical details, kindly refer to the following links:
 * <a href='#Environment dependencies'>2. Environment dependencies </a>
 * <a href='#Usage'>3. Usage: How to run the code </a>
   * <a href='#Training Bridge-Tune'>3.1. Fine-tuning via Bridge-Tune </a>
-  * <a href='#Evaluating model'>3.2. Evaluating fine-tuned models</a>
+  * <a href='#Evaluating model'>3.2. Evaluating the fine-tuned models</a>
 
 
 <span id='File structure'/>
@@ -213,7 +213,7 @@ Note: No need to specify the pre-trained model path here; the default pre-traine
 
 <span id='Evaluating model'/>
 
-### 3.2. Evaluating fine-tuned model
+### 3.2. Evaluating the fine-tuned model
 
 `generate.py` file helps generate embeddings on a specific dataset. The help information of the main script `generate.py` can be obtained by executing the following command.
 
