@@ -6,8 +6,8 @@ This repo is the official code for AAAI-24 "Measuring Task Similarity and Its Im
 <span id='introduction'/>
 
 ## Brief Introduction 
-Not all downstream tasks can effectively benefit from a graph pre-trained model, we propose intermediate step that bridges pre-training and downstream
-tasks, called Birdge-Tune.
+Not all downstream tasks can effectively benefit from a graph pre-trained model. In light of
+this, we propose a novel fine-tuning strategy called Bridge-Tune.
 
 -  Instead of directly fine-tuning a pre-trained model, Bridge-Tune takes an intermediate step that bridges
 the pre-training and downstream tasks and refines the model representations.
@@ -159,10 +159,12 @@ In addition, CUDA 10.0 has been used in our project. Although not all dependenci
 <span id='Usage'/>
 
 ## 3. Usage: How to run the code  <a href='#all_catelogue'>[Back to Top]</a>
-Bridge-Tune paradigm consists of two stages: (1) Fine-tuning via Bridge-Tune and (2) Evaluating the fine-tuned model.
+Bridge-Tune paradigm consists of two stages: (1) Fine-tuning via Bridge-Tune (2) Evaluating the fine-tuned model.
 <span id='Training Bridge-Tune'/>
 
 ### 3.1. Fine-tuning via Bridge-Tune 
+
+To conduct Bridge-Tune, you can execute `train_bridge.py` as follows:
 
 ```bash
 python train_bridge.py \
