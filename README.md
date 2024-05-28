@@ -128,7 +128,7 @@ Below, we will specifically explain the meaning of important file folders to hel
 
 `data`: contains the data of "DD242, DD68, DD687, usa_airport, brazil_airport, europe_airport".
 
-`splits`: **need to unzipped**, contains the split data of "cornell, wisconsin".
+`splits`: **need to unzip**, contains the split data of "cornell, wisconsin".
 
 `scripts`: contains all the scripts for running code.
 
@@ -140,7 +140,7 @@ Below, we will specifically explain the meaning of important file folders to hel
 <span id='Environment dependencies'/>
 
 
-## 2. Envrionment dependencies <a href='#all_catelogue'>[Back to Top]</a>
+## 2. Environment dependencies <a href='#all_catelogue'>[Back to Top]</a>
 
 The script has been tested running under Python 3.7.10, with the following packages installed (along with their dependencies):
 
@@ -215,7 +215,7 @@ Note: No need to specify the pre-trained model path here; the default pre-traine
 
 ### 3.2. Evaluating fine-tuned model
 
-`generate.py` file helps generate embeddings on a specific dataset. The help information of the main script `generate.py` can be obtain by executing the following command.
+`generate.py` file helps generate embeddings on a specific dataset. The help information of the main script `generate.py` can be obtained by executing the following command.
 
 ```bash
 python generate.py -h
@@ -225,7 +225,7 @@ optional arguments:
   --dataset Dataset
   --gpu GPU  GPU id to use.
 ```
-The embedding will be used for evaluation in node classification. The script `evaluate.sh` are available to simplify the evaluation process as follows: 
+The embedding will be used for evaluation in node classification. The script `evaluate.sh` is available to simplify the evaluation process as follows: 
 
 ```
 bash evaluate.sh <model_path> <name> <dataset> <gpu id>
@@ -239,7 +239,7 @@ bash scripts/evaluate.sh saved path_bridge10_usa_airport usa_airport 0
 ```
 
 ## Contact
-If you have any question about the code or the paper, feel free to contact me.
+If you have any questions about the code or the paper, feel free to contact me.
 Email: renh2@zju.edu.cn
 
 ## Cite
