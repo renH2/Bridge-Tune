@@ -1,12 +1,147 @@
-# Bridge-Tune
-
-
+# Bridge-Tune: Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks
 
 ## About
 
-This repo is the official code for AAAI-24 ["Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks"](https://ojs.aaai.org/index.php/AAAI/article/view/29156)
+This repo is the official code for AAAI-24 "Measuring Task Similarity and Its Implication in Fine-Tuning Graph Neural Networks".
+<span id='introduction'/>
 
-## Dependencies
+## Brief Introduction 
+Not all downstream tasks can effectively benefit from a graph pre-trained model, we propose intermediate step that bridges pre-training and downstream
+tasks, called Birdge-Tune.
+
+-  Instead of directly fine-tuning a pre-trained model, Bridge-Tune takes an intermediate step that bridges
+the pre-training and downstream tasks and refines the model representations.
+- The traditional fine-tuning easily falls  into a suboptimal point in the downstream task. In comparison,  the pre-trained model refinement step helps find a better  starting point for fine-tuning and so Bridge-Tune potentially
+builds a better model for the downstream task.
+
+For more technical details, kindly refer to the following links:
+
+<a href='https://ojs.aaai.org/index.php/AAAI/article/view/29156'><img src='https://img.shields.io/badge/Paper-PDF-red'></a> 
+<a href='https://underline.io/lecture/93719-measuring-task-similarity-and-its-implication-in-fine-tuning-graph-neural-networks-video'><img src='https://img.shields.io/static/v1?label=Video&message=underline&color=blue'></a> 
+
+
+## Getting Started
+
+<span id='all_catelogue'/>
+
+### Table of Contents:
+* <a href='#File structure'>1. File structure</a>
+* <a href='#Environment dependencies'>2. Environment dependencies </a>
+* <a href='#Usage'>3. Usage: How to run the code </a>
+  * <a href='#Training Bridge-Tune'>3.1. Fine-tuning via Bridge-Tune </a>
+  * <a href='#Evaluating model'>3.2. Evaluating fine-tuned models</a>
+
+
+<span id='File structure'/>
+
+##  1. File Structure <a href='#all_catelogue'>[Back to Top]</a>
+
+```
+.
+├── README.md
+├── data
+│   ├── DD242
+│   │   ├── DD242.edges
+│   │   ├── DD242.node_labels
+│   │   └── readme.html
+│   ├── DD68
+│   │   ├── DD68.edges
+│   │   ├── DD68.node_labels
+│   │   └── readme.html
+│   ├── DD687
+│   │   ├── DD687.edges
+│   │   ├── DD687.node_labels
+│   │   └── readme.html
+│   ├── hindex
+│   │   ├── aminer_hindex_rand1_5000.edgelist
+│   │   ├── aminer_hindex_rand1_5000.nodelabel
+│   │   ├── aminer_hindex_rand20intop200_5000.edgelist
+│   │   ├── aminer_hindex_rand20intop200_5000.nodelabel
+│   │   ├── aminer_hindex_top1_5000.edgelist
+│   │   └── aminer_hindex_top1_5000.nodelabel
+│   ├── panther
+│   └── struc2vec
+│       ├── barbell.edgelist
+│       ├── brazil-airports.edgelist
+│       ├── brazil-airports.nodelabel
+│       ├── europe-airports.edgelist
+│       ├── europe-airports.nodelabel
+│       ├── facebook348.edgelist
+│       ├── karate-mirrored.edgelist
+│       ├── usa-airports.edgelist
+│       └── usa-airports.nodelabel
+├── dataset.json
+├── gcc
+│   ├── __init__.py
+│   ├── contrastive
+│   │   ├── __init__.py
+│   │   ├── criterions.py
+│   │   └── memory_moco.py
+│   ├── datasets
+│   │   ├── __init__.py
+│   │   ├── data_util.py
+│   │   └── graph_dataset.py
+│   ├── models
+│   │   ├── __init__.py
+│   │   ├── emb
+│   │   │   ├── __init__.py
+│   │   │   └── from_numpy.py
+│   │   ├── gat.py
+│   │   ├── gcn.py
+│   │   ├── gin.py
+│   │   ├── graph_encoder.py
+│   │   └── mpnn.py
+│   ├── tasks
+│   │   ├── __init__.py
+│   │   └── node_classification.py
+│   └── utils
+│       └── misc.py
+├── generate.py
+├── requirements.txt
+├── saved
+│   └── Pretrain_moco_True_dgl_gin_layer_5_lr_0.005_decay_1e-05_bsz_32_hid_64_samples_2000_nce_t_0.07_nce_k_16384_rw_hops_256_restart_prob_0.8_aug_1st_ft_False_deg_16_pos_32_momentum_0.999
+│       └── current.pth
+├── scripts
+│   ├── download.py
+│   ├── evaluate.sh
+│   └── node_classification
+│       ├── baseline.sh
+│       └── ours.sh
+├── splits
+│   ├── d1d5bdd41805e6a6eb0fdf335ebbfb7e.zip
+│   └── f54ddc32338ab0eac9511aaa355b666a.zip
+├── train_bridge.py
+└── utils
+    ├── __init__.py
+    ├── dataset.py
+    ├── pgnn.py
+    ├── signac_tools.py
+    └── sparsegraph
+        ├── __init__.py
+        ├── io.py
+        └── preprocess.py
+```
+
+*****
+
+Below, we will specifically explain the meaning of important file folders to help the user better understand the file structure.
+
+`data`: contains the data of "DD242, DD68, DD687, usa_airport, brazil_airport, europe_airport".
+
+`splits`: **need to unzipped**, contains the split data of "cornell, wisconsin".
+
+`scripts`: contains all the scripts for running code.
+
+`gcc&utils`: contains the code of models.
+
+`saved`: contains the pre-trained graph obtained from [GCC](https://github.com/THUDM/GCC). The specific path for pre-trained model is located in `saved/Pretrain_moco_True_dgl_gin_layer_5_lr_0.005_decay_1e-05_bsz_32_hid_64_samples_2000_nce_t_0.07_nce_k_16384_rw_hops_256_restart_prob_0.8_aug_1st_ft_False_deg_16_pos_32_momentum_0.999/`
+
+
+<span id='Environment dependencies'/>
+
+
+## 2. Envrionment dependencies <a href='#all_catelogue'>[Back to Top]</a>
+
 The script has been tested running under Python 3.7.10, with the following packages installed (along with their dependencies):
 
 - [PyTorch](https://pytorch.org/). Version >=1.4 required. You can find instructions to install from source [here](https://pytorch.org/get-started/previous-versions/).
@@ -20,22 +155,14 @@ The script has been tested running under Python 3.7.10, with the following packa
 In addition, CUDA 10.0 has been used in our project. Although not all dependencies are mentioned in the installation instruction links above, you can find most of the libraries in the package repository of a regular Linux distribution.
 
 
-## File folders
 
-`data`: contains the data of "DD242, DD68, DD687, usa_airport, brazil_airport, europe_airport".
+<span id='Usage'/>
 
-`splits`: **need to unzipped**, contains the split data of "cornell, wisconsin".
+## 3. Usage: How to run the code  <a href='#all_catelogue'>[Back to Top]</a>
+Bridge-Tune paradigm consists of two stages: (1) Fine-tuning via Bridge-Tune and (2) Evaluating the fine-tuned model.
+<span id='Training Bridge-Tune'/>
 
-`scripts`: contains all the scripts for running code.
-
-`gcc&utils`: contains the code of models.
-
-`saved`: contains the pre-trained graph obtained from [GCC](https://github.com/THUDM/GCC). The specific path for pre-trained model is located in `saved/Pretrain_moco_True_dgl_gin_layer_5_lr_0.005_decay_1e-05_bsz_32_hid_64_samples_2000_nce_t_0.07_nce_k_16384_rw_hops_256_restart_prob_0.8_aug_1st_ft_False_deg_16_pos_32_momentum_0.999/`
-
-## Usage: How to run the code
-We divide it into two steps (1) Fine-tuning (2) Evaluating the performance fine-tuned model.
-
-### 1. Fine-tuning via Bridge-Tune
+### 3.1. Fine-tuning via Bridge-Tune 
 
 ```bash
 python train_bridge.py \
@@ -81,7 +208,10 @@ python train_bridge.py \
 
 Note: No need to specify the pre-trained model path here; the default pre-trained model is provided. If a user requires a specific model, they should add the `--resume`.
 
-### 2. Evaluating
+
+<span id='Evaluating model'/>
+
+### 3.2. Evaluating fine-tuned model
 
 `generate.py` file helps generate embeddings on a specific dataset. The help information of the main script `generate.py` can be obtain by executing the following command.
 
@@ -106,11 +236,6 @@ Here is the demo instruction, after the user has trained using the demo provided
 bash scripts/evaluate.sh saved path_bridge10_usa_airport usa_airport 0
 ```
 
-
-## Acknowledgements
-Part of this code is inspired by Qiu et al.'s [GCC: Graph Contrastive Coding](https://github.com/THUDM/GCC).
-
-
 ## Contact
 If you have any question about the code or the paper, feel free to contact me.
 Email: renh2@zju.edu.cn
@@ -129,3 +254,6 @@ If you find this work helpful, please cite
   year={2024}
 }
 ```
+
+## Acknowledgements
+Part of this code is inspired by Qiu et al.'s [GCC: Graph Contrastive Coding](https://github.com/THUDM/GCC).
