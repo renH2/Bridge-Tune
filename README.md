@@ -17,7 +17,7 @@ builds a better model for the downstream task.
 For more technical details, kindly refer to the following links:
 
 <a href='https://ojs.aaai.org/index.php/AAAI/article/view/29156'><img src='https://img.shields.io/badge/Paper-PDF-red'></a> 
-<a href='https://underline.io/lecture/93719-measuring-task-similarity-and-its-implication-in-fine-tuning-graph-neural-networks-video'><img src='https://img.shields.io/static/v1?label=Video&message=underline&color=blue'></a> 
+<a href='https://underline.io/lecture/93719-measuring-task-similarity-and-its-implication-in-fine-tuning-graph-neural-networks-video'><img src='https://img.shields.io/static/v1?label=Video/Poster&message=underline&color=blue'></a> 
 
 
 ## Getting Started
